@@ -1,0 +1,54 @@
+body {
+  background: radial-gradient(circle at top, #0d0d0d 0%, #050505 100%);
+  color: #eee;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 600px;
+}
+
+h1 {
+  font-size: 2em;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff55;
+  margin-bottom: 20px;
+}
+
+.menu button, #regresar {
+  background: #111;
+  border: 2px solid #00ffff44;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 1em;
+}
+
+.menu button:hover, #regresar:hover {
+  border-color: #00ffff;
+  box-shadow: 0 0 10px #00ffff55;
+  transform: scale(1.05);
+}
+
+.oculto {
+  display: none;
+}
+
+#juego {
+  margin-top: 20px;
+  background: #151515;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00ffff22;
+  min-height: 200px;
+}
