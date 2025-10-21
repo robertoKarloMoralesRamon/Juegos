@@ -1,6 +1,7 @@
 const menu = document.getElementById("menu");
 const juego = document.getElementById("juego");
 const btnRegresar = document.getElementById("regresar");
+let juegoActivo = null; // Para intervalos (snake, salto, etc.)
 
 function mostrarJuego(nombre) {
   menu.classList.add("oculto");
@@ -17,6 +18,10 @@ function mostrarJuego(nombre) {
 }
 
 function regresarMenu() {
+  if (juegoActivo) {
+    clearInterval(juegoActivo);
+    juegoActivo = null;
+  }
   juego.classList.add("oculto");
   btnRegresar.classList.add("oculto");
   menu.classList.remove("oculto");
@@ -49,8 +54,8 @@ function jugar(eleccionJugador) {
   ) resultado = "¡Ganaste! 🎉";
   else resultado = "Perdiste 💀";
 
-  document.getElementById("resultado").innerText = 
-    Elegiste ${eleccionJugador}, la PC eligió ${eleccionPC}. ${resultado};
+  document.getElementById("resultado").innerText =
+    `Elegiste ${eleccionJugador}, la PC eligió ${eleccionPC}. ${resultado}`;
 }
 
 /* === 🎯 Adivina el Número === */
@@ -75,9 +80,12 @@ function verificarNumero(secreto) {
 
 /* === 🧩 Memorama === */
 function memorama() {
-  const cartas = ["🍎","🍌","🍒","🍎","🍌","🍒"];
+  const cartas = ["🍎", "🍌", "🍒", "🍎", "🍌", "🍒"];
   cartas.sort(() => Math.random() - 0.5);
-  juego.innerHTML = <h2>🧩 Memorama</h2><div id="tablero"></div>;
+  juego.innerHTML = `
+    <h2>🧩 Memorama</h2>
+    <div id="tablero"></div>
+  `;
   const tablero = document.getElementById("tablero");
   let seleccion = [];
 
@@ -105,13 +113,16 @@ function memorama() {
 
 /* === 🐍 Snake (versión simple) === */
 function snake() {
-  juego.innerHTML = <canvas id="canvas" width="300" height="300"></canvas>;
+  juego.innerHTML = `<canvas id="canvas" width="300" height="300"></canvas>`;
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const box = 10;
-  let snake = [{x:150,y:150}];
+  let snake = [{ x: 150, y: 150 }];
   let dir = "RIGHT";
-  let food = {x:Math.floor(Math.random()*30)*box, y:Math.floor(Math.random()*30)*box};
+  let food = {
+    x: Math.floor(Math.random() * 30) * box,
+    y: Math.floor(Math.random() * 30) * box
+  };
 
   document.onkeydown = e => {
     if (e.key === "ArrowUp" && dir !== "DOWN") dir = "UP";
@@ -122,25 +133,36 @@ function snake() {
 
   function dibujar() {
     ctx.fillStyle = "#000";
-    ctx.fillRect(0,0,300,300);
+    ctx.fillRect(0, 0, 300, 300);
+
     snake.forEach(s => {
       ctx.fillStyle = "#00ffff";
-      ctx.fillRect(s.x,s.y,box,box);
+      ctx.fillRect(s.x, s.y, box, box);
     });
+
     ctx.fillStyle = "red";
-    ctx.fillRect(food.x,food.y,box,box);
+    ctx.fillRect(food.x, food.y, box, box);
 
-    let cabeza = {x:snake[0].x, y:snake[0].y};
-    if (dir==="UP") cabeza.y -= box;
-    if (dir==="DOWN") cabeza.y += box;
-    if (dir==="LEFT") cabeza.x -= box;
-    if (dir==="RIGHT") cabeza.x += box;
+    let cabeza = { x: snake[0].x, y: snake[0].y };
+    if (dir === "UP") cabeza.y -= box;
+    if (dir === "DOWN") cabeza.y += box;
+    if (dir === "LEFT") cabeza.x -= box;
+    if (dir === "RIGHT") cabeza.x += box;
 
-    if (cabeza.x===food.x && cabeza.y===food.y){
-      food = {x:Math.floor(Math.random()*30)*box, y:Math.floor(Math.random()*30)*box};
-    } else snake.pop();
+    if (cabeza.x === food.x && cabeza.y === food.y) {
+      food = {
+        x: Math.floor(Math.random() * 30) * box,
+        y: Math.floor(Math.random() * 30) * box
+      };
+    } else {
+      snake.pop();
+    }
 
-    if (cabeza.x<0||cabeza.x>=300||cabeza.y<0||cabeza.y>=300||snake.some(s=>s.x===cabeza.x&&s.y===cabeza.y)){
+    if (
+      cabeza.x < 0 || cabeza.x >= 300 ||
+      cabeza.y < 0 || cabeza.y >= 300 ||
+      snake.some(s => s.x === cabeza.x && s.y === cabeza.y)
+    ) {
       alert("💀 Perdiste");
       regresarMenu();
       clearInterval(juegoActivo);
@@ -148,7 +170,8 @@ function snake() {
 
     snake.unshift(cabeza);
   }
-  const juegoActivo = setInterval(dibujar,100);
+
+  juegoActivo = setInterval(dibujar, 100);
 }
 
 /* === 🏃 Juego de Salto === */
@@ -168,21 +191,22 @@ function juegoSalto() {
   document.onkeydown = e => {
     if (e.code === "Space" && !player.classList.contains("jump")) {
       player.classList.add("jump");
-      setTimeout(()=>player.classList.remove("jump"),600);
+      setTimeout(() => player.classList.remove("jump"), 600);
     }
   };
 
-  let check = setInterval(()=>{
+  juegoActivo = setInterval(() => {
     const pTop = parseInt(window.getComputedStyle(player).getPropertyValue("top"));
     const oLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
-    if(oLeft<40 && oLeft>0 && pTop>=130){
+    if (oLeft < 40 && oLeft > 0 && pTop >= 130) {
       alert("💥 Te chocaste!");
-      clearInterval(check);
+      clearInterval(juegoActivo);
       regresarMenu();
     }
-  },10);
+  }, 10);
 }
 
+// Estilos dinámicos para el juego de salto
 const estiloExtra = document.createElement("style");
 estiloExtra.innerHTML = `
 #gameArea {
@@ -208,9 +232,9 @@ estiloExtra.innerHTML = `
   animation: saltar 0.6s ease-out;
 }
 @keyframes saltar {
-  0% {bottom: 0;}
-  50% {bottom: 80px;}
-  100% {bottom: 0;}
+  0% { bottom: 0; }
+  50% { bottom: 80px; }
+  100% { bottom: 0; }
 }
 #obstacle {
   width: 20px;
@@ -222,7 +246,7 @@ estiloExtra.innerHTML = `
   animation: mover 1.5s linear infinite;
 }
 @keyframes mover {
-  from {right: -20px;}
-  to {right: 320px;}
+  from { right: -20px; }
+  to { right: 320px; }
 }`;
 document.head.appendChild(estiloExtra);
