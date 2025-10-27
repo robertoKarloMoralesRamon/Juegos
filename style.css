@@ -12,7 +12,7 @@ body {
 .container {
   text-align: center;
   width: 90%;
-  max-width: 600px;
+  max-width: 900px;
 }
 
 h1 {
@@ -50,5 +50,58 @@ h1 {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 15px #00ffff22;
-  min-height: 200px;
+  min-height: 240px;
 }
+
+/* Tableros y botones */
+#tablero, .grid-ttt {
+  display: grid;
+  gap: 8px;
+  justify-content: center;
+  margin: 10px auto;
+}
+
+#tablero button, .cell-ttt {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  border: 2px solid #222;
+  background: linear-gradient(#222,#111);
+  color: #fff;
+  font-size: 1.4em;
+  cursor: pointer;
+}
+
+#tablero button:active, .cell-ttt:active { transform: scale(0.98); }
+
+/* Canvas centering */
+canvas {
+  display: block;
+  margin: 10px auto;
+  background: #000;
+  border-radius: 8px;
+}
+
+/* Buscaminas */
+.buscaminas-row { display: flex; }
+.buscaminas-cell {
+  width: 32px;
+  height: 32px;
+  margin: 2px;
+  font-size: 18px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Juego salto extras (ya se insertan dinámicamente) */
+#gameArea {
+  margin: auto;
+}
+
+/* Mensajes y controles */
+.controls { margin-top: 8px; }
+.small { font-size: 0.9em; color: #ccc; }
